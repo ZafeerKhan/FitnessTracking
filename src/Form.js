@@ -38,14 +38,6 @@ class Form extends React.Component {
           <Grid>
             <Row className="show-grid">
               <Col md={4}>
-                {/*<InputGroup>
-                  <InputGroup.Addon>Date: </InputGroup.Addon>
-                  <FormControl
-                    type="text"
-                    placeholder="Enter Date"
-                    onChange={this.props.handleChange}
-                  />
-                </InputGroup>*/}
                 <DatePicker
                   onChange={this.props.handleDateChange}
                   value={this.props.date}

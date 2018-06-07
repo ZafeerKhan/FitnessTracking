@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Form from './Form.js';
-import WeightRow from './WeightRow.js';
+import TableRow from './TableRow.js';
 import { Button } from 'react-bootstrap';
 import { Table } from 'react-bootstrap'
 import { Grid, Row, Col } from 'react-bootstrap'
@@ -16,7 +16,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.handler = this.handler.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleWeightChange = this.handleWeightChange.bind(this)
     //this.handleDateChange = this.handleDateChange.bind(this)
 
@@ -31,9 +31,9 @@ class App extends Component {
 
   }
 
-  addWeight(weight, date) {
+  addRow(weight, date) {
 
-    let weightObject = <WeightRow weight={weight} date={date}/>;
+    let weightObject = <TableRow weight={weight} date={date}/>;
     weightArray.push(weightObject);
     this.setState(
       {
@@ -52,16 +52,15 @@ class App extends Component {
 
   onDateChange = date => this.setState({ date })
 
-  handler(e) {
+  handleSubmit(e) {
     console.log("called");
-    //weightArray.push(<WeightRow weight = {this.state.value} />);
     e.preventDefault();
     this.setState({
       value: this.state.value,
       date: this.state.date,
       submitted: true,
     })
-    this.addWeight(this.state.value, this.state.date);
+    this.addRow(this.state.value, this.state.date);
   }
 
 
@@ -78,7 +77,7 @@ class App extends Component {
         
         <br /><br /><br /><br /><br /><br />
         <Form 
-          handler={this.handler}
+          handler={this.handleSubmit}
           handleChange={this.handleWeightChange}
           handleDateChange={this.onDateChange}
           date={this.state.date}/>
