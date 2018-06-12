@@ -6,8 +6,63 @@ import TableRow from './TableRow.js';
 import Form from './Form.js';
 import {Grid, Col, Row} from 'react-bootstrap';
 
+var LineChart = require("react-chartjs").Line;
+
+var chartOptions = {
+
+  ///Boolean - Whether grid lines are shown across the chart
+  scaleShowGridLines : true,
+
+  //String - Colour of the grid lines
+  scaleGridLineColor : "rgba(0,0,0,.05)",
+
+  //Number - Width of the grid lines
+  scaleGridLineWidth : 1,
+
+  //Boolean - Whether to show horizontal lines (except X axis)
+  scaleShowHorizontalLines: true,
+
+  //Boolean - Whether to show vertical lines (except Y axis)
+  scaleShowVerticalLines: true,
+
+  //Boolean - Whether the line is curved between points
+  bezierCurve : true,
+
+  //Number - Tension of the bezier curve between points
+  bezierCurveTension : 0.4,
+
+  //Boolean - Whether to show a dot for each point
+  pointDot : true,
+
+  //Number - Radius of each point dot in pixels
+  pointDotRadius : 4,
+
+  //Number - Pixel width of point dot stroke
+  pointDotStrokeWidth : 1,
+
+  //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+  pointHitDetectionRadius : 20,
+
+  //Boolean - Whether to show a stroke for datasets
+  datasetStroke : true,
+
+  //Number - Pixel width of dataset stroke
+  datasetStrokeWidth : 2,
+
+  //Boolean - Whether to fill the dataset with a colour
+  datasetFill : true,
+  
+  //String - A legend template
+  legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
+  
+
+  //Boolean - Whether to horizontally center the label and point dot inside the grid
+  offsetGridLines : false
+};
+
 var weightArray = [];
-var dateArray = [];
+var chartWeightArray = [];
+var chartDateArray = [];
 var rowArray = [];
 
 class App extends Component {
@@ -25,7 +80,21 @@ class App extends Component {
       date: new Date(),
       submitted: false,
       weights: [],
-      dates: [],
+      chartData: {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+          {
+            label: "My First dataset",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: [65, 59, 80, 81, 56, 55, 40]
+          }
+        ]
+      }
     }
 
   }
@@ -48,23 +117,44 @@ class App extends Component {
 
     rowArray.push(rowObj);
     
-    
     //Sort Array based on dates
     rowArray.sort(function(a,b){
       return new Date(a.date.date) - new Date(b.date.date);
     });
 
+
     //Clear Current Array and store HTML objects sorted by date
     weightArray = [];
+    chartWeightArray = [];
+    chartDateArray = [];
+
     rowArray.forEach(function(row) {
       let weightObject = <TableRow key={row.date.date} weight={row.weight.weight} date={row.date.date}/>;
       weightArray.push(weightObject);
+
+      chartDateArray.push(row.date.date.toDateString());
+      chartWeightArray.push(row.weight.weight);
     })
 
     this.setState(
       {
         weights: weightArray,
-        dates: dateArray
+        chartData: 
+          {
+            labels: chartDateArray,
+            datasets: [
+              {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: chartWeightArray
+              }
+            ]
+          }
       })
   }
 
@@ -119,8 +209,16 @@ class App extends Component {
               <Col md={1}>
               </Col>
             </Row>
+            <Row className="show-grid">
+              <LineChart 
+                data={this.state.chartData}
+                options={chartOptions}
+                width="1100"
+                height="250" />
+            </Row>
           </Grid>
         }
+        
 
       </div>
     );
