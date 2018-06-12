@@ -1,4 +1,6 @@
 import React from 'react';
+import { Table } from 'react-bootstrap'
+import { Grid, Row, Col } from 'react-bootstrap'
 
 class TableRow extends React.Component {
   constructor(props) {

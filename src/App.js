@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Form from './Form.js';
+import CreateTable from './CreateTable.js';
 import TableRow from './TableRow.js';
-import { Button } from 'react-bootstrap';
-import { Table } from 'react-bootstrap'
-import { Grid, Row, Col } from 'react-bootstrap'
+import Form from './Form.js';
 
 
 var weightArray = [];
 var dateArray = [];
+var rowArray = [];
 
 class App extends Component {
 
@@ -32,9 +31,25 @@ class App extends Component {
   }
 
   addRow(weight, date) {
+    let rowObj = 
+    {
+      weight: {weight},
+      date: {date}
+    }
+    rowArray.push(rowObj);
+    
+    //Sort Array based on dates
+    rowArray.sort(function(a,b){
+      return new Date(a.date.date) - new Date(b.date.date);
+    });
 
-    let weightObject = <TableRow weight={weight} date={date}/>;
-    weightArray.push(weightObject);
+    //Clear Current Array and store HTML objects sorted by date
+    weightArray = [];
+    rowArray.forEach(function(row) {
+      let weightObject = <TableRow key={row.date.date} weight={row.weight.weight} date={row.date.date}/>;
+      weightArray.push(weightObject);
+    })
+
     this.setState(
       {
         weights: weightArray,
@@ -53,7 +68,6 @@ class App extends Component {
   onDateChange = date => this.setState({ date })
 
   handleSubmit(e) {
-    console.log("called");
     e.preventDefault();
     this.setState({
       value: this.state.value,
@@ -81,23 +95,11 @@ class App extends Component {
           handleChange={this.handleWeightChange}
           handleDateChange={this.onDateChange}
           date={this.state.date}/>
-        
-        <Table striped bordered condensed hover className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Weight</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              this.state.weights.map(function(row) {
-                return row
-              })
-            }
-          </tbody>
-        </Table>
 
+        {
+          this.state.weights.length > 0 &&
+          <CreateTable weights={this.state.weights}/>
+        }
 
       </div>
     );
