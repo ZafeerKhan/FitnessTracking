@@ -4,7 +4,7 @@ import './App.css';
 import CreateTable from './CreateTable.js';
 import TableRow from './TableRow.js';
 import Form from './Form.js';
-
+import {Grid, Col, Row} from 'react-bootstrap';
 
 var weightArray = [];
 var dateArray = [];
@@ -36,7 +36,18 @@ class App extends Component {
       weight: {weight},
       date: {date}
     }
+
+    //Remove Duplicate Dates
+    for (var i = 0; i < rowArray.length; i++) {
+      let elementDate = rowArray[i].date.date.toLocaleDateString();
+      let newDate = {date}.date.toLocaleDateString();
+      if (elementDate === newDate) {
+        rowArray.splice(i, 1);
+      }
+    }
+
     rowArray.push(rowObj);
+    
     
     //Sort Array based on dates
     rowArray.sort(function(a,b){
@@ -98,7 +109,17 @@ class App extends Component {
 
         {
           this.state.weights.length > 0 &&
-          <CreateTable weights={this.state.weights}/>
+          <Grid>
+            <Row className="show-grid">
+              <Col md={1}>
+              </Col>
+              <Col md={10}>
+                <CreateTable weights={this.state.weights}/>
+              </Col>
+              <Col md={1}>
+              </Col>
+            </Row>
+          </Grid>
         }
 
       </div>

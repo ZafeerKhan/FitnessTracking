@@ -13,7 +13,7 @@ class CreateTable extends React.Component {
         	<thead>
           		<tr>
                   <th>Date</th>
-                  <th>Weight</th>
+                  <th>Weight (lbs)</th>
                 </tr>
             </thead>
             <tbody>
